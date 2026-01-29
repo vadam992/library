@@ -1,0 +1,32 @@
+# =========================
+# Dependencies
+# =========================
+/vendor/
+composer.lock
+
+# =========================
+# Environment & secrets
+# =========================
+.env
+config/config.local.php
+config/config.dev.php
+
+# =========================
+# Server specific
+# =========================
+/public/.htaccess
+
+# =========================
+# IDE / OS
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# Runtime / cache
+# =========================
+/cache/
+/logs/
+/tmp/
