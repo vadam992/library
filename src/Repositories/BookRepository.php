@@ -13,13 +13,18 @@ final class BookRepository
     {
         if ($search !== null && trim($search) !== '') {
             $q = '%' . trim($search) . '%';
+
             $stmt = $this->pdo->prepare("
                 SELECT ID, Title, Author, PublishYear, IsAvailable
                 FROM dbo.Books
-                WHERE Title LIKE :q OR Author LIKE :q
+                WHERE Title LIKE :q1 OR Author LIKE :q2
                 ORDER BY ID DESC
             ");
-            $stmt->execute(['q' => $q]);
+            $stmt->execute([
+                'q1' => $q,
+                'q2' => $q,
+            ]);
+
             return $stmt->fetchAll();
         }
 
