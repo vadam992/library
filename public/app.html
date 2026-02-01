@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="hu">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Library – Könyvtári nyilvántartó</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="container">
+        <h1>📚 Library</h1>
+        <p class="subtitle">Egyszerű könyvtári nyilvántartás (CRUD + AJAX)</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="grid">
+        <!-- Új könyv / szerkesztés -->
+        <article class="card">
+          <div class="card__header">
+            <h2 id="formTitle">Új könyv hozzáadása</h2>
+            <p class="muted" id="formHint">
+              Töltsd ki a mezőket, majd mentsd el.
+            </p>
+          </div>
+
+          <form id="bookForm" class="form" autocomplete="off">
+            <input type="hidden" id="bookId" />
+
+            <label class="field">
+              <span>Cím *</span>
+              <input
+                id="title"
+                type="text"
+                maxlength="200"
+                required
+                placeholder="pl. 1984"
+              />
+            </label>
+
+            <label class="field">
+              <span>Szerző *</span>
+              <input
+                id="author"
+                type="text"
+                maxlength="150"
+                required
+                placeholder="pl. George Orwell"
+              />
+            </label>
+
+            <label class="field">
+              <span>Kiadás éve</span>
+              <input
+                id="publishYear"
+                type="number"
+                min="1400"
+                max="2100"
+                placeholder="pl. 1949"
+              />
+            </label>
+
+            <label class="checkbox">
+              <input id="isAvailable" type="checkbox" checked />
+              <span>Elérhető (kölcsönözhető)</span>
+            </label>
+
+            <div class="actions">
+              <button class="btn primary" type="submit" id="submitBtn">
+                Hozzáadás
+              </button>
+              <button class="btn" type="button" id="cancelEditBtn" hidden>
+                Mégse
+              </button>
+            </div>
+          </form>
+
+          <div class="toast" id="toast" hidden></div>
+        </article>
+
+        <!-- Lista -->
+        <article class="card">
+          <div class="card__header row">
+            <div>
+              <h2>Könyvek</h2>
+              <p class="muted" id="countLabel">Betöltés…</p>
+            </div>
+
+            <div class="search">
+              <input
+                id="search"
+                type="search"
+                placeholder="Keresés cím/szerző alapján…"
+              />
+              <button class="btn" id="refreshBtn" type="button">
+                Frissítés
+              </button>
+            </div>
+          </div>
+
+          <div class="tableWrap">
+            <table class="table" aria-label="Könyv lista">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Cím</th>
+                  <th>Szerző</th>
+                  <th>Év</th>
+                  <th>Státusz</th>
+                  <th class="right">Műveletek</th>
+                </tr>
+              </thead>
+              <tbody id="booksTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="empty" id="emptyState" hidden>
+            Nincs találat. Adj hozzá új könyvet vagy módosítsd a keresést.
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container muted">API: <code>/api/books</code></div>
+    </footer>
+
+    <script src="/assets/app.js"></script>
+  </body>
+</html>
