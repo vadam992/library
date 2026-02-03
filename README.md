@@ -138,14 +138,30 @@ A projekt XAMPP környezetben, Apache webszerveren, VirtualHost használatával 
 
 ### Hosts fájl módosítása
 
-Windows alatt a következő sort kell hozzáadni a hosts fájlhoz:
+Admin joggal nyisd meg:
 
 ```
 C:\Windows\System32\drivers\etc\hosts
 ```
 
+Add hozzá:
+
 ```
 127.0.0.1   library.local
+```
+
+### .htaccess (routing)
+
+**`public/.htaccess`**
+
+```apache
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+RewriteRule ^ index.php [L]
 ```
 
 ### Apache VirtualHost konfiguráció
