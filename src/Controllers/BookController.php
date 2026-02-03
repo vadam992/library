@@ -93,19 +93,39 @@ final class BookController
     public function borrow(int $id): void
     {
         $book = $this->repo->find($id);
-        if (!$book) Response::error('Book not found', 404);
-        if ((int)$book['IsAvailable'] === 0) Response::error('Book is already borrowed', 409);
+        if (!$book) {
+            Response::error('Book not found', 404);
+        }
+
+        // Ha már kölcsönzött, nem hibázunk
+        if ((int)$book['IsAvailable'] === 0) {
+            Response::json([
+                'data' => $book,
+                'message' => 'Book is already borrowed'
+            ], 200);
+        }
 
         $this->repo->setAvailability($id, false);
-        Response::json(['data' => $this->repo->find($id)]);
+        $updated = $this->repo->find($id);
+
+        Response::json([
+            'data' => $updated,
+            'message' => 'Book borrowed'
+        ], 200);
     }
+
 
     public function giveBack(int $id): void
     {
         $book = $this->repo->find($id);
         if (!$book) Response::error('Book not found', 404);
 
+        if ((int)$book['IsAvailable'] === 1) {
+            Response::json(['data' => $book, 'message' => 'Book is already available'], 200);
+        }
+
         $this->repo->setAvailability($id, true);
-        Response::json(['data' => $this->repo->find($id)]);
+        Response::json(['data' => $this->repo->find($id), 'message' => 'Book returned'], 200);
     }
+
 }

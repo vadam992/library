@@ -52,20 +52,28 @@ final class BookRepository
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO dbo.Books (Title, Author, PublishYear, IsAvailable)
+            OUTPUT INSERTED.ID
             VALUES (:title, :author, :year, :avail)
         ");
 
         $stmt->execute([
-            'title' => $title,
+            'title'  => $title,
             'author' => $author,
-            'year' => $publishYear,              // lehet null
-            'avail' => $isAvailable ? 1 : 0,
+            'year'   => $publishYear,
+            'avail'  => $isAvailable ? 1 : 0,
         ]);
 
-        // SQL Serverben a legbiztosabb:
-        $id = (int)$this->pdo->query("SELECT SCOPE_IDENTITY() AS id")->fetch()['id'];
+        $id = (int)$stmt->fetchColumn();
+
+        if ($id <= 0) {
+            // Debughoz hasznos lehet, de ne hagyd productionben:
+            // $err = $stmt->errorInfo();
+            throw new \RuntimeException('Insert succeeded but failed to retrieve inserted ID.');
+        }
+
         return $id;
     }
+
 
     public function update(int $id, string $title, string $author, ?int $publishYear, bool $isAvailable): bool
     {
