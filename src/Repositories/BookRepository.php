@@ -89,12 +89,8 @@ final class BookRepository
      * @param bool     $isAvailable Elérhetőség
      * @return int A létrehozott könyv azonosítója
      */
-    public function create(
-        string $title,
-        string $author,
-        ?int $publishYear,
-        bool $isAvailable = true
-    ): int {
+    public function create(string $title, string $author, ?int $publishYear, bool $isAvailable = true): int
+    {
         $stmt = $this->pdo->prepare("
             INSERT INTO dbo.Books (Title, Author, PublishYear, IsAvailable)
             OUTPUT INSERTED.ID
@@ -104,14 +100,15 @@ final class BookRepository
         $stmt->execute([
             'title'  => $title,
             'author' => $author,
-            'year' => $publishYear, // lehet null
-            'avail' => $isAvailable ? 1 : 0,
+            'year'   => $publishYear,
+            'avail'  => $isAvailable ? 1 : 0,
         ]);
 
-        // SQL Server esetén a legbiztosabb mód az utolsó ID lekérésére
-        $id = (int)$this->pdo
-            ->query("SELECT SCOPE_IDENTITY() AS id")
-            ->fetch()['id'];
+        $id = (int)$stmt->fetchColumn();
+
+        if ($id <= 0) {
+            throw new \RuntimeException('Insert succeeded but failed to retrieve inserted ID.');
+        }
 
         return $id;
     }
