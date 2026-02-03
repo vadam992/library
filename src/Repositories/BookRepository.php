@@ -97,11 +97,12 @@ final class BookRepository
     ): int {
         $stmt = $this->pdo->prepare("
             INSERT INTO dbo.Books (Title, Author, PublishYear, IsAvailable)
+            OUTPUT INSERTED.ID
             VALUES (:title, :author, :year, :avail)
         ");
 
         $stmt->execute([
-            'title' => $title,
+            'title'  => $title,
             'author' => $author,
             'year' => $publishYear, // lehet null
             'avail' => $isAvailable ? 1 : 0,
